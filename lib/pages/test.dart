@@ -4,21 +4,17 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:quality_tester/pages/dimension.dart';
+import 'package:quality_tester/pages/result.dart';
+import 'package:hive/hive.dart';
+import 'package:collection/collection.dart';
 
 class test extends StatefulWidget {
   const test({Key? key,}) : super(key: key);
-
   @override
   State<test> createState() => _testState();}
 
-
-
 class _testState extends State<test> {
-
   File? image;
-
-
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -63,22 +59,31 @@ class _testState extends State<test> {
     );
     if (response.statusCode == 200) {
       // Parse the response JSON
-      print(response.body);
+      // print(response.body);
       final responseData = json.decode(response.body);
 
       // Extract the modified Base64 string and array from the response
 
       this.b64 = responseData['res_image'];
-      final dimensions = responseData['dimensions'];
-      // print('this is response $b64');
-      // String dim_img = utf8.decode(base64.decode(res_image));
+      final test_dim = responseData['dimensions'];
+      var box = await Hive.openBox('myDataBox');
+      List ben_dim = box.get('benchmark', defaultValue: []);
 
-      // print('Modified Base64: $res_image');
-      // print('Array: $dimensions');
-      // this.b64 = response.body;
+      List<List<dynamic>> zipped = List.generate(
+        ben_dim.length,
+            (index) => [ben_dim[index], test_dim[index]],
+      );
+      List<double> err = [];
 
+      zipped.forEach((pair) {
+        double ben = pair[0];
+        double tes = pair[1];
+        double res = ((ben-tes)/ben)as double;
+        err.add(res);
+      });
+      print(err);
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => dimension(b64!)));
+          builder: (context) => result(b64!,err)));
     } else {
       // Handle the request failure
       print('Request failed with status: ${response.statusCode}');

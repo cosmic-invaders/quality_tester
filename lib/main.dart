@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quality_tester/pages/test.dart';
 import 'package:quality_tester/pages/benchmark.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 // This is Testing branch
-void main() {
+void main() async{
+  await Hive.initFlutter();
+
   runApp(MaterialApp(
       theme:  ThemeData(
         brightness: Brightness.dark,

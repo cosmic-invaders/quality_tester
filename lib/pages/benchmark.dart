@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:quality_tester/pages/dimension.dart';
+import 'package:hive/hive.dart';
 
 class benchmark extends StatefulWidget {
   const benchmark({Key? key,}) : super(key: key);
@@ -69,13 +70,9 @@ class _benchmarkState extends State<benchmark> {
       // Extract the modified Base64 string and array from the response
 
       this.b64 = responseData['res_image'];
-      final dimensions = responseData['dimensions'];
-      // print('this is response $b64');
-      // String dim_img = utf8.decode(base64.decode(res_image));
-
-      // print('Modified Base64: $res_image');
-      // print('Array: $dimensions');
-      // this.b64 = response.body;
+      List dimensions = responseData['dimensions'];
+      var box = await Hive.openBox('myDataBox');
+      box.put('benchmark', dimensions);
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => dimension(b64!)));
