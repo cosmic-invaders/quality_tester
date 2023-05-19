@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:quality_tester/pages/dimension.dart';
 
 class benchmark extends StatefulWidget {
   const benchmark({Key? key,}) : super(key: key);
@@ -43,14 +44,14 @@ class _benchmarkState extends State<benchmark> {
 
 
   // final String apiUrl = "https://a48e-203-192-251-182.ngrok.io/imageapi";
-  final String apiUrl = "http://10.0.2.2:3000/imageapi";
+  final String apiUrl = "http://10.0.2.2:3000/dimensions";
   String? b64;
 
   Future sendImage(File imageFile, BuildContext context) async {
     List<int> imageBytes = await imageFile.readAsBytes();
     String base64Image = base64.encode(imageBytes);
 
-    print(base64Image);
+    // print(base64Image);
     final Map<String, String> headers = {
       'Content-Type': 'application/json'
     };
@@ -60,19 +61,27 @@ class _benchmarkState extends State<benchmark> {
       headers: headers,
       body: jsonEncode({'image': base64Image}),
     );
-
     if (response.statusCode == 200) {
-      // handle success
-
-      print('output from here');
+      // Parse the response JSON
       print(response.body);
-      this.b64 = response.body;
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => segmentation(b64!)));
+      final responseData = json.decode(response.body);
 
+      // Extract the modified Base64 string and array from the response
+
+      this.b64 = responseData['res_image'];
+      final dimensions = responseData['dimensions'];
+      // print('this is response $b64');
+      // String dim_img = utf8.decode(base64.decode(res_image));
+
+      // print('Modified Base64: $res_image');
+      // print('Array: $dimensions');
+      // this.b64 = response.body;
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => dimension(b64!)));
     } else {
-      // handle error
-      print('Error sending image: ${response.statusCode}');
+      // Handle the request failure
+      print('Request failed with status: ${response.statusCode}');
     }
 
   }
