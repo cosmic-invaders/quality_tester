@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:quality_tester/pages/dimension.dart';
 import 'package:hive/hive.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class benchmark extends StatefulWidget {
   const benchmark({Key? key,}) : super(key: key);
@@ -83,6 +84,12 @@ class _benchmarkState extends State<benchmark> {
           builder: (context) => dimension(b64!)));
     } else {
       // Handle the request failure
+      String errorMessage = 'Request failed with status ${response.statusCode}';
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
       print('Request failed with status: ${response.statusCode}');
     }
     setState(() {

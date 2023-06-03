@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:quality_tester/pages/result.dart';
 import 'package:hive/hive.dart';
 import 'package:collection/collection.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class test extends StatefulWidget {
   const test({Key? key,}) : super(key: key);
@@ -90,6 +91,12 @@ class _testState extends State<test> {
           builder: (context) => result(b64!,err)));
     } else {
       // Handle the request failure
+      String errorMessage = 'Request failed with status ${response.statusCode}';
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
       print('Request failed with status: ${response.statusCode}');
     }
     setState(() {
