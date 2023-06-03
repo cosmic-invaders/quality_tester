@@ -39,8 +39,8 @@ class _testState extends State<test> {
 
 
 
-  // final String apiUrl = "https://a48e-203-192-251-182.ngrok.io/imageapi";
-  final String apiUrl = "http://10.0.2.2:3000/dimensions";
+  final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
+  // final String apiUrl = "http://10.0.2.2:3001/dimensions";
   String? b64;
 
   Future sendImage(File imageFile, BuildContext context) async {
