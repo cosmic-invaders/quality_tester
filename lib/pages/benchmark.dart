@@ -16,6 +16,7 @@ class benchmark extends StatefulWidget {
 
 
 class _benchmarkState extends State<benchmark> {
+  bool _isLoading = false;
 
   File? image;
 
@@ -49,6 +50,9 @@ class _benchmarkState extends State<benchmark> {
   String? b64;
 
   Future sendImage(File imageFile, BuildContext context) async {
+    setState(() {
+      _isLoading = true; // Set loading state to true before starting the async task
+    });
     List<int> imageBytes = await imageFile.readAsBytes();
     String base64Image = base64.encode(imageBytes);
 
@@ -81,7 +85,9 @@ class _benchmarkState extends State<benchmark> {
       // Handle the request failure
       print('Request failed with status: ${response.statusCode}');
     }
-
+    setState(() {
+      _isLoading = false; // Set loading state to true before starting the async task
+    });
   }
 
   @override
@@ -164,20 +170,30 @@ class _benchmarkState extends State<benchmark> {
                     ),
                   ),
                   image != null
-                      ? ElevatedButton(
-                    // color: Colors.orange[200],
-                      child: const Text(
-                          "UPLOAD",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          )
-                      ),
-                      onPressed: () {
-                        sendImage(image!, context);
-                      }
-                  ) : SizedBox(height: 10,width:10),
+                      ? Stack(
+                    children: [
+                      if (!_isLoading)
+                        ElevatedButton(
+                          // color: Colors.orange[200],
+
+                            child: Text(
+                                "UPLOAD",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                )
+                            ),
+                            onPressed: () {
+                              onPressed:sendImage(image!, context);
+                            }
+                        ),
+                      if (_isLoading)
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                    ],
+                  ): SizedBox(height: 10,width:10),
                 ],
               )),
 
