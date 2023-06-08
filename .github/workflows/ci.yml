@@ -1,6 +1,7 @@
 name: Android Release
 
-# 1on:
+# 1
+on:
   # 2
   push:
     branches: [ "master" ]
@@ -31,7 +32,8 @@ jobs:
         with:
           # 11
           flutter-version: "2.19.6"
-          channel: 'stable'      # 12
+          channel: 'stable'
+      # 12
       - name: Get dependencies
         run: flutter pub get
 
