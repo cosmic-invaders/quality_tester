@@ -1,16 +1,34 @@
-
+name: Deploy iOS and Android App to App Store and Play Store
 on:
-  # 2
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-  # 3
-  workflow_dispatch:
-
-# 4
+    tags:
+      - 'v*'
 jobs:
+  release-ios:
+    name: Build and release iOS app
+    runs-on: macos-latest
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.8.0
+        with:
+          flutter-version: '3.7.12'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1.2'
+      - name: Install Fastlane
+        run: cd ios && bundle install && cd ..
+      - name: Install packages
+        run: flutter pub get
+      - name: Install pods
+        run: cd ios && pod install && cd ..
+      - name: Prebuild
+        run: flutter build ios --release --no-codesign
+      - name: Execute Fastlane command
+        run: cd ios && fastlane release type:github
+        timeout-minutes: 40
   release-android:
     name: Build and release Android app
     runs-on: ubuntu-latest
