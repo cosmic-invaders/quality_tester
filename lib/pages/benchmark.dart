@@ -72,8 +72,8 @@ class _benchmarkState extends State<benchmark> {
 
 
 
-  // final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
-  final String apiUrl = "http://10.0.2.2:3001/dimensions";
+  final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
+  // final String apiUrl = "http://10.0.2.2:3001/dimensions";
   String? b64;
 
   Future sendImage(File imageFile, BuildContext context) async {
@@ -133,12 +133,12 @@ class _benchmarkState extends State<benchmark> {
     final size = MediaQuery.of(context).size;
 
     // Calculate the width and height as a percentage of screen size
-    final boxWidth = size.width * 0.75;
-    final boxHeight = size.height * 0.4;
+    final boxWidth = size.width * 0.7;
+    final boxHeight = size.height * 0.3;
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Scan the Deformation"),
+          title: const Text("Measure Benchmark"),
         ),
 
         body: Center(
