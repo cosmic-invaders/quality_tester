@@ -9,17 +9,59 @@ import 'package:hive/hive.dart';
 import 'package:collection/collection.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+
 class test extends StatefulWidget {
   const test({Key? key,}) : super(key: key);
+
   @override
   State<test> createState() => _testState();}
 
+
+
 class _testState extends State<test> {
   bool _isLoading = false;
+
   File? image;
-  Future pickImage() async {
+
+
+
+
+  void showOptionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pick Image'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text('Camera'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    pickImage(ImageSource.camera);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: Text('Gallery'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    pickImage(ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
@@ -28,22 +70,14 @@ class _testState extends State<test> {
     }
   }
 
-  Future pickImageC() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
 
 
 
-  final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
-  // final String apiUrl = "http://10.0.2.2:3001/dimensions";
+
+  // final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
+  final String apiUrl = "http://10.0.2.2:3001/dimensions";
   String? b64;
+
 
   Future sendImage(File imageFile, BuildContext context) async {
     setState(() {
@@ -104,6 +138,8 @@ class _testState extends State<test> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     var assetsImage = new AssetImage('assets/illustration.png');
@@ -117,7 +153,7 @@ class _testState extends State<test> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Scan the test"),
+          title: const Text("Scan the Deformation"),
         ),
 
         body: Center(
@@ -149,60 +185,112 @@ class _testState extends State<test> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          // color: Colors.red[400],
 
-                            child: const Text(
-                                "Pick Image from Gallery",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                )
-                            ),
-                            onPressed: () {
-                              pickImage();
-                            }
-                        ),
-                        SizedBox(width: 20,),
+
                         ElevatedButton(
-                          // color: Colors.red[400],
-                            child: const Text(
-                                "Pick Image from Camera",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                )
+                          onPressed: () {
+                            // Button action
+                            showOptionsDialog(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10), // Set the border radius
+
                             ),
-                            onPressed: () {
-                              pickImageC();
-                            }
+                            elevation: 2,
+                          ),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFA68F28), // Darker yellow color
+                                  Color(0xFF918F65), // Dull yellow color
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            child: Container(
+                              width: 200, // Specify the desired width of the button
+                              height: 40,
+
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Select Test Image',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
+
+
                       ],
 
                     ),
                   ),
-
-
-                  image != null?
-                  Stack(
+                  SizedBox(
+                    height: 15,
+                  ),
+                  image != null
+                      ?  Stack(
                     children: [
                       if (!_isLoading)
                         ElevatedButton(
-                          // color: Colors.orange[200],
+                          onPressed: () {
+                            // Button action
+                            sendImage(image!,context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10), // Set the border radius
 
-                            child: Text(
-                                "UPLOAD",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                )
+                              ),
+                              elevation: 5
+                          ),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                // gradient: LinearGradient(
+                                //   colors: [Color(0xFF37474F), Color(0xFF78909C)],
+                                //   begin: Alignment.topCenter,
+                                //   end: Alignment.bottomCenter,
+                                // ),
+                                color: Colors.blue
+
                             ),
-                            onPressed: () {
-                              onPressed:sendImage(image!, context);
-                            }
+                            child: Container(
+                              width: 200, // Specify the desired width of the button
+                              height: 40,
+
+                              alignment: Alignment.center,
+                              child:Row(children: [
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                Icon(
+                                  Icons.cloud_upload, // Replace with your desired icon
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'Upload',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),],),
+                            ),
+                          ),
                         ),
                       if (_isLoading)
                         Center(
@@ -210,11 +298,8 @@ class _testState extends State<test> {
                         ),
                     ],
                   ): SizedBox(height: 10,width:10),
-
                 ],
               )),
-
-
 
             ],
           ),
