@@ -45,6 +45,8 @@ dependencies:
   hive_flutter:
   dio:
   fluttertoast: ^8.0.8
+  photo_view: ^0.13.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,3 +99,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#42a5f5"
+  image: assets/illustration.png
+

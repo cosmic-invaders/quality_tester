@@ -72,7 +72,8 @@ class _benchmarkState extends State<benchmark> {
 
 
 
-  final String apiUrl = "https://bae4-203-192-251-163.ngrok-free.app/dimensions";
+
+  final String apiUrl = "https://4f00-119-161-98-148.ngrok-free.app/dimensions";
   // final String apiUrl = "http://10.0.2.2:3001/dimensions";
   String? b64;
 
