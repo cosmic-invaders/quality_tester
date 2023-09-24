@@ -1,0 +1,9 @@
+Flask==2.3.2
+flask_ngrok==0.0.25
+matplotlib==3.5.3
+numpy==1.23.2
+opencv_contrib_python==4.7.0.72
+opencv_python==4.7.0.72
+opencv_python_headless==4.6.0.66
+Pillow==9.3.0
+Pillow==10.0.0
